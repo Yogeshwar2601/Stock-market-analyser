@@ -5,6 +5,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const authRoutes = require("./routes/authRoutes");
 const newsRoutes = require("./routes/newsRoutes");
+const alertRoutes = require("./routes/alertRoutes");
 const axios = require("axios");
 require("dotenv").config();
 
@@ -66,6 +67,7 @@ io.on("connection", (socket) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/news", newsRoutes);
+app.use("/api/alerts", alertRoutes);
 app.get("/api/history/:symbol/:range", async (req, res) => {
     try {
         const { symbol, range } = req.params;
