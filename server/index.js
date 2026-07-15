@@ -6,6 +6,7 @@ const { Server } = require("socket.io");
 const authRoutes = require("./routes/authRoutes");
 const newsRoutes = require("./routes/newsRoutes");
 const alertRoutes = require("./routes/alertRoutes");
+const stockRoutes = require("./routes/stockRoutes");
 const axios = require("axios");
 require("dotenv").config();
 
@@ -68,6 +69,7 @@ io.on("connection", (socket) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/alerts", alertRoutes);
+app.use("/api", stockRoutes);
 app.get("/api/history/:symbol/:range", async (req, res) => {
     try {
         const { symbol, range } = req.params;
@@ -112,7 +114,6 @@ app.get("/api/history/:symbol/:range", async (req, res) => {
             return res.json([]);
         }
 
-        // ✅ FIXED FORMAT FOR LINE CHART
         const formatted = data.values
             .reverse()
             .map((item) => ({
@@ -120,7 +121,7 @@ app.get("/api/history/:symbol/:range", async (req, res) => {
                     interval === "5min" || interval === "30min"
                         ? item.datetime
                         : item.datetime.split(" ")[0],
-                price: Number(item.close), // 🔥 ONLY CLOSE PRICE
+                price: Number(item.close),
             }));
 
         res.json(formatted);
